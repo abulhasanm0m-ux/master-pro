@@ -1,0 +1,24 @@
+name: Build Windows VM
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Manual run
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Build er jonno (RDP run korbe na)
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker Image
+      run: |
+        docker build -t windows-vm .
+        echo "✅ Docker Image Built Successfully!"
+    
+    - name: Show Instructions
+      run: |
+        echo "=========================================="
+        echo "🎯 Now run this on your VPS/Server:"
+        echo "docker run -d --device /dev/kvm --cpus=4 --memory=8g -p 6080:6080 -p 3389:3389 -v windows_data:/data -v windows_iso:/iso -e RAM=8192 -e CPU_CORES=4 windows-vm"
+        echo "=========================================="
